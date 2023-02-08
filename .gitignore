@@ -1,0 +1,141 @@
+# Created by https://www.toptal.com/developers/gitignore/api/keil,atmelstudio,mplabx
+# Edit at https://www.toptal.com/developers/gitignore?templates=keil,atmelstudio,mplabx
+
+### AtmelStudio ###
+## Ignore Atmel Studio temporary files and build results
+# https://www.microchip.com/mplab/avr-support/atmel-studio-7
+
+# Atmel Studio is powered by an older version of Visual Studio,
+# so most of the project and solution files are the same as VS files,
+# only prefixed by an `at`.
+
+#Build Directories
+[Dd]ebug/
+[Rr]elease/
+ignore/
+Previous Version/
+
+
+#Build Results
+*.o
+*.d
+*.eep
+*.elf
+*.map
+*.srec
+
+#User Specific Files
+*.atsuo
+
+### Keil ###
+# something maybe need to add
+# *.bat  # generate batch file
+# output/project_name # uv project generate without file ext
+# *.SRC # generate source file
+# *.src
+DebugConfig/
+RTE/
+#Build Results
+*.crf
+*.o
+*.d
+*.axf
+*.htm
+*.lnp
+*.map
+*.sct
+*.dep
+*.iex
+*.bak
+lst/
+MDK-ARM/*.scvd
+MDK-ARM/*.iex
+
+
+
+# Prerequisites
+*.dep
+# Object files
+*.obj
+*.OBJ
+
+# Listing Files
+*.COD
+*.cod
+*.[Ii]
+*.LST
+*.lst
+*.MAP
+*.[Mm]51
+*.[Mm]66
+*.SCR
+*.scr
+
+# LINK output
+*.ABS
+
+# Libraries
+*.lib
+*.LIB
+
+
+# uv output
+*.lnp
+*.build_log.htm
+
+
+# Build Files
+*._IA
+*.__[Ii]
+*._[Ii][Ii]
+
+# project
+*.uvgui.*
+*.uvguix.*
+
+
+### MPLabX ###
+#Ignore List for Microchips MPLabX IDE
+#Form of netbeans with vendor specific changes
+#Taken from zeha on GIST https://gist.github.com/zeha/5999375
+
+*.pre
+*.p1
+*.sym
+*.sdb
+*.obj.dmp
+html/
+nbproject/private/
+nbproject/Package-*.bash
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+funclist
+nbproject/Makefile-*
+disassembly/
+
+# End of https://www.toptal.com/developers/gitignore/api/keil,atmelstudio,mplabx
+
+# Created by https://www.toptal.com/developers/gitignore/api/orcad, pads
+# Edit at https://www.toptal.com/developers/gitignore?templates=orcad, pads
+
+### OrCAD ###
+### Cadence Design Systm's OrCAD ###
+*.dat
+*.ASC
+*.BOM
+*.DBK
+*.DRC
+*.ONL
+*.opj
+
+### PADS ###
+*.inf
+*.sch
+*.eco
+[Gg][Ee][Rr][Bb][Ee][Rr]/
+
+# End of https://www.toptal.com/developers/gitignore/api/orcad, pads
