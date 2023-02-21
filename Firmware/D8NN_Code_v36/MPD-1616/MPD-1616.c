@@ -1,6 +1,6 @@
 /*
 	TITLE  	: MPD-1616
-	AUTHOR	: ¿Ã ¿Á»∆
+	AUTHOR	: Ïù¥ Ïû¨Ìõà
 	MPU		: NUC130SC2AE
 	CLOCK	: 22.1184 MHz
 	CREATED	: 2017. 05. 30
@@ -44,23 +44,35 @@
 
 /*
 
-	[17.10.12] - ±Ë∆˜ ∞¯¿Â ≈◊Ω∫∆Æ
-		1. »≠ªÏ«• ∏æÁ ∫Ø∞Ê (≈∏æ˜√ºøÕ µø¿œ«œ∞‘ : ∫∏∆Ì¿˚¿Œ∞Õ¿Ã ¡¡¥Ÿ....)
-		2. ¥Î±‚ªÛ≈¬(πÊ«‚ Ω≈»£∞° æ»µÈæÓ ø√∂ß) æ∆π´∞Õµµ «•Ω√ æ»«œ∞‘ (CHARACTER πËø≠ ∏∂¡ˆ∏∑ STOP)
+	[17.10.12] - ÍπÄÌè¨ Í≥µÏû• ÌÖåÏä§Ìä∏
+		1. ÌôîÏÇ¥Ìëú Î™®Ïñë Î≥ÄÍ≤Ω (ÌÉÄÏóÖÏ≤¥ÏôÄ ÎèôÏùºÌïòÍ≤å : Î≥¥Ìé∏Ï†ÅÏù∏Í≤ÉÏù¥ Ï¢ãÎã§....)
+		2. ÎåÄÍ∏∞ÏÉÅÌÉú(Î∞©Ìñ• Ïã†Ìò∏Í∞Ä ÏïàÎì§Ïñ¥ Ïò¨Îïå) ÏïÑÎ¨¥Í≤ÉÎèÑ ÌëúÏãú ÏïàÌïòÍ≤å (CHARACTER Î∞∞Ïó¥ ÎßàÏßÄÎßâ STOP)
 
-	[17.10.13] - √ﬂ∞° ø‰√ª
-		1. Dipsw º≥¡§¿∏∑Œ UP & DOWN º≥¡§ «“ ºˆ ¿÷µµ∑œ (±‚¡∏ø°¥¬ TOP, BOTTOM µø¿œ«œ∞‘ UP √‚∑¬)
-		2. Dipsw º≥¡§¿∏∑Œ ¥Î±‚ªÛ≈¬(STOP)ø°º≠ πÊ«‚ø° µ˚∏• »≠ªÏ«• «•Ω√ (±Ù∫˝¿” ±‚¥… √ﬂ∞°)
+	[17.10.13] - Ï∂îÍ∞Ä ÏöîÏ≤≠
+		1. Dipsw ÏÑ§Ï†ïÏúºÎ°ú UP & DOWN ÏÑ§Ï†ï Ìï† Ïàò ÏûàÎèÑÎ°ù (Í∏∞Ï°¥ÏóêÎäî TOP, BOTTOM ÎèôÏùºÌïòÍ≤å UP Ï∂úÎ†•)
+		2. Dipsw ÏÑ§Ï†ïÏúºÎ°ú ÎåÄÍ∏∞ÏÉÅÌÉú(STOP)ÏóêÏÑú Î∞©Ìñ•Ïóê Îî∞Î•∏ ÌôîÏÇ¥Ìëú ÌëúÏãú (ÍπúÎπ°ÏûÑ Í∏∞Îä• Ï∂îÍ∞Ä)
 				
 		-+--------+--------+--------+--------+--------+-
          |  DIPSW |    1   |    2   |    3   |    4   |
 		-+--------+--------+--------+--------+--------+-
-		 |  ±‚ ¥… |   UP   | Scroll |  Fade  |   TOP  |
+		 |  Í∏∞ Îä• |   UP   | Scroll |  Fade  |   TOP  |
 		 |        |  DOWN  |        | IN,OUT | BOTTOM |
 		-+--------+--------+--------+--------+--------+-
 	[17.10.20]
-		1. version «•Ω√ ∫Ø∞Ê (øÏ -> ¡¬) Ω∫≈©∑—
-		 - º˝¿⁄ ¡∂«’¿∫ ∞°¥…«œ≥™ æÀ∆ƒ∫™(10.20/ V,E,R)«—¡§ π◊ 1.1 ªÁ¿Ã '.'(dot) ¿∫ ∞Ì¡§
+		1. version ÌëúÏãú Î≥ÄÍ≤Ω (Ïö∞ -> Ï¢å) Ïä§ÌÅ¨Î°§
+		 - Ïà´Ïûê Ï°∞Ìï©ÏùÄ Í∞ÄÎä•ÌïòÎÇò ÏïåÌååÎ≤≥(10.20/ V,E,R)ÌïúÏ†ï Î∞è 1.1 ÏÇ¨Ïù¥ '.'(dot) ÏùÄ Í≥†Ï†ï
+		 
+	[23.02.15]
+		ver 1.2
+		 - PCB Íµ¨Ï°∞ Î≥ÄÍ≤Ω (ÌöåÎ°ú ÎèôÏùº)
+		 - Ï†ëÏ†ê Î≥ÄÍ≤Ω
+		  1. UP		- 	DIR
+		  2. DOWN	- 	N.E
+		  3. ERR	- 	AUT
+		  4. TEST 	- 	INS
+		  5. FIRE	-	ERR
+		  6. AUTO	-	FR
+		  7. BUZZ	-	STP		// Scroll Stop signal
 */
 
 #include <stdio.h>
@@ -114,7 +126,7 @@ STS_FLAG S_Flag;
 
 // CAN
 STR_CANMSG_T rrMsg;			// CAN Recive
-STR_CANMSG_T msg1;   		// for CAN ±∏¡∂√º º±æ
+STR_CANMSG_T msg1;   		// for CAN Íµ¨Ï°∞Ï≤¥ ÏÑ†Ïñ∏
 
 MSG_STATUS_ESCALATOR MsgSTES;		// Status Struct
 CAN_FLAG C_Flag;					// CAN_Flag Struct
@@ -146,7 +158,7 @@ int bFrameCnt = 5;
 BYTE b10msCnt;
 
 BYTE bText[4] = {14, 11, 12, 13};	// { , V, E, R, }
-BYTE bVer[2]  = { 1,  1};				// ver 1.1
+BYTE bVer[2]  = { 1,  2};				// ver 1.2
 
 /*------------------------------------------------------//
 //
@@ -170,9 +182,9 @@ void Delay_ms(int time)		// 10ms
 void TIMER_Init()
 {
 	// Timer 0,1,2,3 clock source - internal 22.1184 MHz	
-	DrvSYS_SelectIPClockSource(E_SYS_TMR0_CLKSRC, 7);
-	DrvSYS_SelectIPClockSource(E_SYS_TMR1_CLKSRC, 7);
-	DrvSYS_SelectIPClockSource(E_SYS_TMR3_CLKSRC, 7);
+	DrvSYS_SelectIPClockSource(E_SYS_TMR0_CLKSRC, 0);		// XTAL(0) : 14.7456MHz
+	DrvSYS_SelectIPClockSource(E_SYS_TMR1_CLKSRC, 0);		// XTAL(0) : 14.7456MHz
+	DrvSYS_SelectIPClockSource(E_SYS_TMR3_CLKSRC, 7);		// HIRC(7) : 22.1184MHz
 
 	DrvTIMER_Init();
 	
@@ -220,9 +232,9 @@ void TMR0_Callback(void)
 				bArrow_Scroll = 0;
 			}
 			
-			if(fScrollSLOW)							// ∞®º”
+			if(fScrollSLOW)							// Í∞êÏÜç
 			{
-				if(wSpeed < 240)					// ∞®º” ¡ﬂ.. 
+				if(wSpeed < 240)					// Í∞êÏÜç Ï§ë.. 
 					wSpeed += 50;
 				else if(bArrow_Scroll == 1)
 				{
@@ -230,14 +242,14 @@ void TMR0_Callback(void)
 					fArrowScroll = FALSE;
 					fScrollSLOW = FALSE;					
 				}
-				bFrameCnt = 200;					// ScrollSLOW ¡ﬂ TCMPR∞™ ∞®º“ ∂ßπÆ
-				fFadeIN = TRUE;						// ScrollStop »ƒ ¡§ªÛªÛ≈¬ ¿Ø¡ˆ »ƒ FadeOut
-													//(bFrameCnt > 200, FadeIN => ¡§ªÛ 5√  ¿Ø¡ˆ)
+				bFrameCnt = 200;					// ScrollSLOW Ï§ë TCMPRÍ∞í Í∞êÏÜå ÎïåÎ¨∏
+				fFadeIN = TRUE;						// ScrollStop ÌõÑ Ï†ïÏÉÅÏÉÅÌÉú Ïú†ÏßÄ ÌõÑ FadeOut
+													//(bFrameCnt > 200, FadeIN => Ï†ïÏÉÅ 5Ï¥à Ïú†ÏßÄ)
 			}
 			
-			else									// øÓ«‡ ¡ﬂ
+			else									// Ïö¥Ìñâ Ï§ë
 			{
-				if(wSpeed > 160)					// ∞°º” ¡ﬂ..
+				if(wSpeed > 160)					// Í∞ÄÏÜç Ï§ë..
 					wSpeed -= 30;
 			}
 		}
@@ -245,7 +257,7 @@ void TMR0_Callback(void)
 	
 // Display
 	
-	DrvGPIO_SetPortBits(E_GPA, 0xFFFF);		// Display √ ±‚»≠ -> ¿‹ªÛ ¡¶∞≈	
+	DrvGPIO_SetPortBits(E_GPA, 0xFFFF);		// Display Ï¥àÍ∏∞Ìôî -> ÏûîÏÉÅ Ï†úÍ±∞	
 	Latch_OFF();						// Latch Output at rising edge 	
 	
 	bRowLine++;	
@@ -260,11 +272,11 @@ void TMR0_Callback(void)
 
 			if(bFrameCnt <= 190)    // 16ms * 95 = 1520ms = 1.5s
 			{
-				if(fFadeIN)			// TIMER3->TCMPR∞™¿Ã 1000 ¿ÃªÛ¿Ã∏È displayø° øµ«‚¿ª ¡‹ (950 πÃ∏∏ ¿Ø¡ˆ)
+				if(fFadeIN)			// TIMER3->TCMPRÍ∞íÏù¥ 1000 Ïù¥ÏÉÅÏù¥Î©¥ displayÏóê ÏòÅÌñ•ÏùÑ Ï§å (950 ÎØ∏Îßå Ïú†ÏßÄ)
 				{
 					TIMER3->TCMPR = 5 * bFrameCnt;
 				}
-				else				// TIMER3->TCMPR∞™¿Ã 0¿Ã∏È timer OFF (5 ¿ÃªÛ ¿Ø¡ˆ)
+				else				// TIMER3->TCMPRÍ∞íÏù¥ 0Ïù¥Î©¥ timer OFF (5 Ïù¥ÏÉÅ Ïú†ÏßÄ)
 				{
 					TIMER3->TCMPR = 5 * (200 - bFrameCnt);
 				}
@@ -657,6 +669,11 @@ int main (void)
 	DrvSYS_Delay(20000);
 
 	while(!SYSCLK->CLKSTATUS.OSC22M_STB);
+	
+	DrvSYS_SetOscCtrl(E_SYS_XTL12M, 1);
+	DrvSYS_Delay(20000);
+	
+	while(!SYSCLK->CLKSTATUS.XTL12M_STB);
 
 // 0 : Ex 4 ~ 24 MHz,	 1 : Ex 32 K,		2 : PLL,		3 : In 10 K,		7 : In 22 MHz
 	DrvSYS_SelectHCLKSource(7);
@@ -712,7 +729,7 @@ int main (void)
 	param.u8TimeOut 		= 0;
 	DrvUART_Open(UART_PORT2, &param);
 	*/
-/*************** Dipsw ¿–±‚*****************************/
+/*************** Dipsw ÏùΩÍ∏∞*****************************/
 	bDipsw = (DrvGPIO_GetPortBits(E_GPB) & 0x000F);
 	
 	if(bDipsw & 0x8)
@@ -748,8 +765,8 @@ int main (void)
 			
 			C_Flag.fUp 		=  MsgSTES.Status[1] & 0x01;
 			C_Flag.fDown 	= (MsgSTES.Status[1] & 0x02) ? TRUE : FALSE;
-			C_Flag.fAuto 	= (MsgSTES.Status[1] & 0x04) ? TRUE : FALSE;		// ¿⁄µø
-			C_Flag.fInsp 	= (MsgSTES.Status[1] & 0x08) ? TRUE : FALSE;		// ºˆµø
+			C_Flag.fAuto 	= (MsgSTES.Status[1] & 0x04) ? TRUE : FALSE;		// ÏûêÎèô
+			C_Flag.fInsp 	= (MsgSTES.Status[1] & 0x08) ? TRUE : FALSE;		// ÏàòÎèô
  			C_Flag.fError	= (MsgSTES.Status[1] & 0x10) ? TRUE : FALSE;
 			C_Flag.fFire 	= (MsgSTES.Status[1] & 0x20) ? TRUE : FALSE;
 			C_Flag.fU_Buzz  = (MsgSTES.Status[1] & 0x40) ? TRUE : FALSE;		// TOP MultiPost Buzzer
@@ -771,7 +788,7 @@ int main (void)
 		
 		if(fArrowScroll && S_Flag.fUp && (S_Flag.fPosition == BOTTOM))
 		{
-			fFade_InOut = FALSE;		// ¡§¡ˆ »ƒ ¥ŸΩ√ Ω√¿€«“∂ß Fade_InOut¿Ã ∞…∑¡¿÷¿Ω
+			fFade_InOut = FALSE;		// Ï†ïÏßÄ ÌõÑ Îã§Ïãú ÏãúÏûëÌï†Îïå Fade_InOutÏù¥ Í±∏Î†§ÏûàÏùå
 			
 			S_Flag.fUp  = FALSE;
 			for(i = 0; i < 16; i++)	
@@ -781,7 +798,7 @@ int main (void)
 		// Down_Scroll
 		else if(fArrowScroll && S_Flag.fDown && (S_Flag.fPosition == TOP))
 		{
-			fFade_InOut = FALSE;		// ¡§¡ˆ »ƒ ¥ŸΩ√ Ω√¿€«“∂ß Fade_InOut¿Ã ∞…∑¡¿÷¿Ω
+			fFade_InOut = FALSE;		// Ï†ïÏßÄ ÌõÑ Îã§Ïãú ÏãúÏûëÌï†Îïå Fade_InOutÏù¥ Í±∏Î†§ÏûàÏùå
 			
 			S_Flag.fDown = FALSE;
 			for(i = 0; i < 16; i++)
@@ -796,7 +813,7 @@ int main (void)
 		// else Display		
 		else
 		{
-			if((!GPB_2) || fMIX)		// MIX¿œ∂ß FadeInOut X
+			if((!GPB_2) || fMIX)		// MIXÏùºÎïå FadeInOut X
 				fFade_InOut = FALSE;
 			else if(GPB_2)				// DIPSW2 _ Fade ON/OFF
 				fFade_InOut = TRUE;
@@ -813,7 +830,7 @@ int main (void)
 }
 
 /*------------------------------------------------------
-//		Ω√¿€Ω√ LED »Æ¿Œ						LED_CHECK()
+//		ÏãúÏûëÏãú LED ÌôïÏù∏						LED_CHECK()
 //-----------------------------------------------------*/
 void LED_Check(void)
 { 
@@ -828,7 +845,7 @@ void LED_Check(void)
 		for(k = 1; k <= 3; k++)			// color test
 		{
 			bColor = k;
-			Delay_ms(12);
+			Delay_ms(2);
 		}		
 	}
 /*
@@ -862,7 +879,7 @@ void LED_Check(void)
 	// version display_move
 	Display_Text(4);
 	Display_Version();
-	Delay_ms(300);
+	Delay_ms(200);
 	
 	bColor = GRN;
 	// clear
@@ -885,8 +902,11 @@ void LED_Check(void)
 
 void Read_Status(void)
 {	
+	// 2023.02.15
+	// Ï†ëÏ†ê Î∞©ÏãùÎßå ÌîÑÎ°úÍ∑∏Îû® ÏßÑÌñâÌï®
+	// CANÌÜµÏã†ÏùÄ ÎÇòÏ§ëÏóê ÌîÑÎ°úÌÜ†ÏΩú ÌôïÏ†ïÎêòÎ©¥ Ï∂îÍ∞Ä ÏòàÏ†ï
 	// --------------------------------------------------------- ERROR
-	if(C_Flag.fError || (IN_ERROR == 1))
+	if(C_Flag.fError || (IN_ERR == 1))
 	{	
 		bLED_STS = ERROR;
 		
@@ -894,8 +914,9 @@ void Read_Status(void)
 		bColor = RED;		
 		//printf(" ERROR ");
 	}
-	// --------------------------------------------------------- FIRE
-	else if(C_Flag.fFire || (IN_FIRE == 1))
+	
+	// --------------------------------------------------------- FIRE	
+	if(C_Flag.fFire || (IN_FIRE == 1))
 	{		
 		bLED_STS = FIRE;
 		
@@ -904,8 +925,9 @@ void Read_Status(void)
 		fMIX = TRUE;		
 		//printf(" FIRE ");
 	}
-	// --------------------------------------------------------- INSP
-	else if((C_Flag.fInsp || (IN_INSP == 1)) && !(C_Flag.fAuto))
+	
+	// --------------------------------------------------------- INSP	
+	if(C_Flag.fInsp || (IN_INS == 1))
 	{
 		bLED_STS = INSP;
 		
@@ -915,139 +937,61 @@ void Read_Status(void)
 		//printf(" TEST ");
 	}
 	
-	else if(C_Flag.fAuto || (IN_AUTO == 1))
-	{		
-		if(C_Flag.fUp || (IN_UP == 1)) 			
+	if(IN_DIR == 1)
+	{
+		if(S_Flag.fPosition == BOTTOM)
 		{
-			if(S_Flag.fPosition == BOTTOM)
+			bDisplay = UP;
+			bColor = GRN;
+			
+			bLED_STS = AUTO;
+			
+			S_Flag.fUp = TRUE;
+			
+			if(IN_STP == 1)
 			{
-				bDisplay = UP;
-				bColor = GRN;
-				
-				bLED_STS = AUTO;
-				if(fScrolling)
-				{
-					if(C_Flag.fMove)
-						fArrowScroll = TRUE;				// Auto, Arrow Scroll Start
-					else
-						fScrollSLOW = TRUE;
-				}
-				else
-					fArrowScroll = TRUE;
-				S_Flag.fUp = TRUE;
-
-				bPreDir = UP;
-			}
-			else if(S_Flag.fPosition == TOP)
-			{				
-				//bDisplay = DONT;
-				bColor = RED;
-				(fYelblink) ? (bDisplay = DONT) : (bDisplay = DONT_sub);
-						
-				fMIX = TRUE;
-				
-				bPreDir = DONT;
-			}
-		}
-		else if(C_Flag.fDown || (IN_DOWN == 1))
-		{
-			if(S_Flag.fPosition == TOP)
-			{				
-				(fUPDOWN) ? (bDisplay = DOWN) : (bDisplay = UP);
-				bColor = GRN;
-				
-				bLED_STS = AUTO;
-				if(fScrolling)
-				{
-					if(C_Flag.fMove)
-						fArrowScroll = TRUE;				// Auto, Arrow Scroll Start
-					else
-						fScrollSLOW = TRUE;
-				}
-				else
-					fArrowScroll = TRUE;
-				S_Flag.fDown = TRUE;
-				
-				(fUPDOWN) ? (bPreDir = DOWN) : (bPreDir = UP);
-			}
-			else if(S_Flag.fPosition == BOTTOM)
-			{
-				//bDisplay = DONT;
-				bColor = RED;
-				(fYelblink) ? (bDisplay = DONT) : (bDisplay = DONT_sub);
-						
-				fMIX = TRUE;
-				
-				bPreDir = DONT;
-			}				
-		}
-		/*
-		else
-		{	
-			if(fScrolling)
-			{					
-				switch(bPreDir)
-				{	
-					case UP :					// case UP : TOP - X(DONT), BOTTOM - UP
-						if(fArrowScroll)
-						{							
-							(fUPDOWN) ? (S_Flag.fUp = TRUE) : (S_Flag.fDown = TRUE);
-							fScrollSLOW = TRUE;
-						}
-						else
-						{
-							bLED_STS = UP;				
-						
-							bDisplay = UP;
-							bColor = GRN;					
-						}
-						break;
-					
-					case DOWN :					// case DOWN : TOP - DOWN, BOTTOM - X(DONT)
-						if(fArrowScroll)
-						{							
-							S_Flag.fDown = TRUE;
-							fScrollSLOW = TRUE;
-						}
-						else
-						{
-							bLED_STS = DOWN;				
-						
-							bDisplay = DOWN;
-							bColor = GRN;					
-						}
-						break;
-					
-					case DONT :
-						bColor = RED;
-						(fYelblink) ? (bDisplay = DONT) : (bDisplay = DONT_sub);
-							
-						fMIX = TRUE;				
-						break;
-					
-					default :
-						bLED_STS = ERROR;
-					
-						bDisplay = ERROR;
-						bColor = RED;
-						break;			
-				}				
+				fScrollSLOW = TRUE;
 			}
 			else
 			{
-				bDisplay = STOP;
-				bColor = GRN;
-				fScrollSLOW = TRUE;	
+				fArrowScroll = TRUE;
 			}
+				
+			S_Flag.fUp = TRUE;
+
+			bPreDir = UP;
 		}
-		*/
-		else
-		{
-			bDisplay = STOP;
+		else if(S_Flag.fPosition == TOP)
+		{				
+			(fUPDOWN) ? (bDisplay = DOWN) : (bDisplay = UP);
 			bColor = GRN;
-			fScrollSLOW = TRUE;	
+			
+			bLED_STS = AUTO;
+			
+			S_Flag.fDown = TRUE;
+			
+			if(IN_STP == 1)
+			{
+				fScrollSLOW = TRUE;
+			}
+			else
+			{
+				fArrowScroll = TRUE;
+			}
+			
+			(fUPDOWN) ? (bPreDir = DOWN) : (bPreDir = UP);
 		}
 	}
+	
+	if(IN_NE == 1)
+	{		
+		bColor = RED;
+		(fYelblink) ? (bDisplay = DONT) : (bDisplay = DONT_sub);
+				
+		fMIX = TRUE;
+		
+		bPreDir = DONT;
+	}	
 
 	// --------------------------------------------------------- Yellow _ Red Blink Flag init
 	
@@ -1055,19 +999,19 @@ void Read_Status(void)
 		fMIX = FALSE;
 	
 	// --------------------------------------------------------- BUZZER
-	if(((C_Flag.fU_Buzz && (S_Flag.fPosition == TOP))	 ||		// CAN Signal (at TOP)
-		(C_Flag.fD_Buzz && (S_Flag.fPosition == BOTTOM)) ||		// CAN Siganl (at BOTTOM)
-		(IN_BUZZER == 1)) && (S_Flag.fBuzzer == FALSE))			// INPUT Signal
-	{
-		S_Flag.fBuzzer = TRUE;				// When the buzz signal is received, keep the buzz ON
-		OUT_BUZZER = TRUE;
-		//printf("Buzz_On  ");		
-	}
-	else if(C_Flag.fU_Buzz == C_Flag.fD_Buzz == IN_BUZZER == 0)
-	{
-		S_Flag.fBuzzer = FALSE;
-		OUT_BUZZER = FALSE;
-	}
+//	if(((C_Flag.fU_Buzz && (S_Flag.fPosition == TOP))	 ||		// CAN Signal (at TOP)
+//		(C_Flag.fD_Buzz && (S_Flag.fPosition == BOTTOM)) ||		// CAN Siganl (at BOTTOM)
+//		(IN_BUZZER == 1)) && (S_Flag.fBuzzer == FALSE))			// INPUT Signal
+//	{
+//		S_Flag.fBuzzer = TRUE;				// When the buzz signal is received, keep the buzz ON
+//		OUT_BUZZER = TRUE;
+//		//printf("Buzz_On  ");		
+//	}
+//	else if(C_Flag.fU_Buzz == C_Flag.fD_Buzz == IN_BUZZER == 0)
+//	{
+//		S_Flag.fBuzzer = FALSE;
+//		OUT_BUZZER = FALSE;
+//	}
 	
 	// --------------------------------------------------------- LED_STATUS
 	if(bLED_STS != bPre_LED_STS)
@@ -1092,7 +1036,7 @@ void Display_Version()
 		{
 			wColLineBuf[i] = (wColLineBuf_Sub[i] << (bShift + 1)) | wTemp[i] >> (16 - bShift);			
 		}
-		Delay_ms(10);
+		Delay_ms(5);
 	}	
 }
 
@@ -1111,7 +1055,7 @@ void Display_Text(int MAX)
 								 (FONT_VERSION[bText[num + 1]][i] >> (8 - bShift));
 				wColLineBuf_Sub[i] = wColLineBuf[i];
 			}
-			Delay_ms(10);
+			Delay_ms(5);
 		}
 	}	
 	

@@ -1,6 +1,6 @@
 /*
 	 TITLE  	: MPD-1616_header
-	 AUTHOR		: ¿Ã ¿Á »∆
+	 AUTHOR		: Ïù¥ Ïû¨ Ìõà
 	 MPU		: NUC130SC2AE	 
 	 CREATED	: 2017. 05. 30
 	 VERSION	: 1.0
@@ -16,9 +16,9 @@
 //
 /*------------------------------------------------------*/
 
-typedef 	unsigned char 	BYTE;
-typedef 	BYTE				BOOL;
-typedef 	unsigned int 		WORD;
+typedef unsigned char 	BYTE;
+typedef BYTE			BOOL;
+typedef unsigned int 	WORD;
 typedef	unsigned long 	DWORD;
 
 /*------------------------------------------------------*/
@@ -41,7 +41,7 @@ typedef	unsigned long 	DWORD;
 
 #define ERROR		0
 #define UP			1
-#define DOWN		2			// æÓ¥¿ πÊ«‚ø°º≠µÁ ¡¯¿‘ «œ¥¬ πÊ«‚¿∏∑Œ »≠ªÏ«• «•Ω√ 
+#define DOWN		2			// Ïñ¥Îäê Î∞©Ìñ•ÏóêÏÑúÎì† ÏßÑÏûÖ ÌïòÎäî Î∞©Ìñ•ÏúºÎ°ú ÌôîÏÇ¥Ìëú ÌëúÏãú 
 #define	INSP		3
 #define DONT		4
 #define DONT_sub 	5
@@ -54,7 +54,17 @@ typedef	unsigned long 	DWORD;
 #define Latch_G			GPB_9
 #define Latch_R			GPB_10	
 
+#define IN_DIR			GPC_8
+#define IN_NE			GPC_9
 
+#define IN_AUT			GPB_4
+#define IN_INS			GPB_5
+#define IN_ERR			GPB_6
+#define IN_FIRE			GPB_7
+
+#define IN_STP			GPF_5
+#define OUT_BUZZER		GPF_4
+/*
 #define IN_UP			GPC_8
 #define IN_DOWN			GPC_9
 
@@ -65,6 +75,7 @@ typedef	unsigned long 	DWORD;
 
 #define IN_BUZZER		GPF_5
 #define OUT_BUZZER		GPF_4
+*/
 
 // CAN ID
 
@@ -77,7 +88,7 @@ typedef	unsigned long 	DWORD;
 //
 /*------------------------------------------------------*/
 
-// Status Escalator MSG : øÓ«‡¡§∫∏ 0x0500
+// Status Escalator MSG : Ïö¥ÌñâÏ†ïÎ≥¥ 0x0500
 typedef struct _MSG_STATUS_ESCALATOR
 {
 	BYTE bMode;			// 0x01
@@ -92,15 +103,15 @@ typedef struct _MSG_STATUS_ESCALATOR
 typedef struct _CAN_FLAG
 {
 	volatile WORD fUp		:1;
-	volatile WORD fDown	:1;
-	volatile WORD fAuto	:1;
-	volatile WORD fInsp	:1;
+	volatile WORD fDown		:1;
+	volatile WORD fAuto		:1;
+	volatile WORD fInsp		:1;
 	volatile WORD fError	:1;
-	volatile WORD fFire	:1;
+	volatile WORD fFire		:1;
 	volatile WORD fU_Buzz	:1;
 	volatile WORD fD_Buzz	:1;
 	
-	volatile WORD fMove	:1;
+	volatile WORD fMove		:1;
 	
 	WORD                    :7;
 } CAN_FLAG;
@@ -108,10 +119,10 @@ typedef struct _CAN_FLAG
 // Status Flag
 typedef struct _STS_FLAG
 {
-	volatile BYTE fPosition :1;
+	volatile BYTE fPosition  :1;
 	volatile BYTE fUp 		 :1;
 	volatile BYTE fDown 	 :1;
-	volatile BYTE fAUTO	 :1;
+	volatile BYTE fAUTO	 	 :1;
 	volatile BYTE fINSP 	 :1;
 	volatile BYTE fError 	 :1;
 	volatile BYTE fFire 	 :1;
