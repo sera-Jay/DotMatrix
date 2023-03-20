@@ -40,6 +40,7 @@ typedef	unsigned long 	DWORD;
 #define VER			10
 
 #define ERROR		0
+#define ERROR_CODE	20
 #define UP			1
 #define DOWN		2			// 어느 방향에서든 진입 하는 방향으로 화살표 표시 
 #define	INSP		3

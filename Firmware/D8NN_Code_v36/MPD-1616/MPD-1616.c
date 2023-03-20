@@ -73,6 +73,11 @@
 		  5. FIRE	-	ERR
 		  6. AUTO	-	FR
 		  7. BUZZ	-	STP		// Scroll Stop signal
+		  
+		  
+	[23.03.20]
+		ver 1.3
+		 - Error code 표시 추가 (Only Can통신)
 */
 
 #include <stdio.h>
@@ -83,11 +88,11 @@
 #include "DrvTIMER.h"
 #include "DrvSPI.h"
 
-//#include "DrvUART.h"
+#include "DrvUART.h"
 
 #include "MPD-1616.h"
 
-//extern char GetChar(void);
+extern char GetChar(void);
 
 /*------------------------------------------------------*/
 //
@@ -104,8 +109,10 @@ void LED_Check(void);
 
 void Read_Status(void);
 
-void Display_Version(void);
-void Display_Text(int MAX);
+void Display_Version_Text(void);
+void Display_Version_Number(void);
+
+void Display_Error_code(BYTE bErrorCode);
 /*------------------------------------------------------*/
 //
 //			VARIABLE
@@ -113,13 +120,14 @@ void Display_Text(int MAX);
 /*------------------------------------------------------*/
 
 /* external variable */
-extern const WORD FONT_NUMBER[10][16];
+extern const WORD FONT_NUMBER1616[10][16];
 extern const WORD FONT_CHARACTER[9][16];	
-extern	WORD FONT_VERSION[11][16];
+extern const WORD FONT_NUMBER0816[15][16];
 extern const WORD FONT_CHECK[16];
+extern const WORD FONT_ERROR[16];
 
 //UART
-//STR_UART_T param;
+STR_UART_T param;
 
 // Status Flag
 STS_FLAG S_Flag;
@@ -157,8 +165,11 @@ int bFrameCnt = 5;
 // Time Count
 BYTE b10msCnt;
 
+
+BYTE gbErrorCode = 0;
+
 BYTE bText[4] = {14, 11, 12, 13};	// { , V, E, R, }
-BYTE bVer[2]  = { 1,  2};				// ver 1.2
+BYTE bVer[2]  = { 1,  3};				// ver 1.3
 
 /*------------------------------------------------------//
 //
@@ -181,23 +192,29 @@ void Delay_ms(int time)		// 10ms
 //-----------------------------------------------------*/
 void TIMER_Init()
 {
-	// Timer 0,1,2,3 clock source - internal 22.1184 MHz	
+	// Timer 0,1,2,3 clock source - XTAL 14.7456MHz (internal 22.1184 MHz)
 	DrvSYS_SelectIPClockSource(E_SYS_TMR0_CLKSRC, 0);		// XTAL(0) : 14.7456MHz
 	DrvSYS_SelectIPClockSource(E_SYS_TMR1_CLKSRC, 0);		// XTAL(0) : 14.7456MHz
-	DrvSYS_SelectIPClockSource(E_SYS_TMR3_CLKSRC, 7);		// HIRC(7) : 22.1184MHz
+	DrvSYS_SelectIPClockSource(E_SYS_TMR3_CLKSRC, 0);		// XTAL(0) : 14.7456MHz
 
 	DrvTIMER_Init();
 	
 	
-	SYSCLK->APBCLK.TMR3_EN = 1;
-	TIMER3->TISR.TIF 	   = 1;
-	TIMER3->TCSR.MODE 	   = E_ONESHOT_MODE;
-	TIMER3->TCSR.PRESCALE  = 21;
-	TIMER3->TCMPR 		   = 1000;
+	SYSCLK->APBCLK.TMR3_EN = 1;					// Timer3 Clock Enable
+	TIMER3->TISR.TIF 	   = 1;					// Timer Interrupt Flag (TDR value matches the TCMP value)
+	TIMER3->TCSR.MODE 	   = E_ONESHOT_MODE;	// 00 : One-shot Mode
+	TIMER3->TCSR.PRESCALE  = 14;				// clock sourece is divided by (PRESCALE + 1)
+	TIMER3->TCMPR 		   = 1000;				// Timer Compared Value
+	// Time-Out period = Clock * (8bit)(Prescale + 1) * (24bit)TCMP
 	
-	// Sys Clock 	: 22118400 Hz
+	// Sys Clock 	: 22,118,400 Hz
 	// Prescale  	: 21
-	// Timer Clk 	: SYS Clk / (Prescale + 1) = 1005382 Hz
+	// Timer Clk 	: SYS Clk / (Prescale + 1) = 1,005,382 Hz
+	// Timer period : 9.9464 * e-7 = 1 us
+	
+	// Sys Clock 	: 14,745,600 Hz
+	// Prescale  	: 14
+	// Timer Clk 	: SYS Clk / (Prescale + 1) = 983,040 Hz
 	// Timer period : 9.9464 * e-7 = 1 us
 	
 
@@ -270,7 +287,7 @@ void TMR0_Callback(void)
 		{
 			bFrameCnt++;			// 95 10 100 255 254 / 190 5 200 510 508
 
-			if(bFrameCnt <= 190)    // 16ms * 95 = 1520ms = 1.5s
+			if(bFrameCnt < 190)    // 16ms * 95 = 1520ms = 1.5s
 			{
 				if(fFadeIN)			// TIMER3->TCMPR값이 1000 이상이면 display에 영향을 줌 (950 미만 유지)
 				{
@@ -278,7 +295,7 @@ void TMR0_Callback(void)
 				}
 				else				// TIMER3->TCMPR값이 0이면 timer OFF (5 이상 유지)
 				{
-					TIMER3->TCMPR = 5 * (200 - bFrameCnt);
+					TIMER3->TCMPR = 5 * (190 - bFrameCnt);
 				}
 			}
 			
@@ -718,7 +735,7 @@ int main (void)
 	DrvSPI_SetEndian(eDRVSPI_PORT0, eDRVSPI_LSB_FIRST);
 	// Rising edge - Tx, Falling edge - Rx, data length = 16 bit
 	DrvSPI_SetClockFreq(eDRVSPI_PORT0, 20000000, 0);		// 1.83 MHz
-	/*
+	
 	// Init GPIO and configure UART0
 	DrvGPIO_InitFunction(E_FUNC_UART2);
 	param.u32BaudRate 		= 115200;
@@ -728,7 +745,7 @@ int main (void)
 	param.u8cRxTriggerLevel = DRVUART_FIFO_1BYTES;
 	param.u8TimeOut 		= 0;
 	DrvUART_Open(UART_PORT2, &param);
-	*/
+	
 /*************** Dipsw 읽기*****************************/
 	bDipsw = (DrvGPIO_GetPortBits(E_GPB) & 0x000F);
 	
@@ -777,7 +794,16 @@ int main (void)
 			else
 				C_Flag.fMove = FALSE;
 			
-		}		
+			
+			if(MsgSTES.bCurrentErrorCode)
+			{
+				gbErrorCode = MsgSTES.bCurrentErrorCode;
+			}
+			else
+			{
+				gbErrorCode = 0;
+			}			
+		}
 		
 		Read_Status();		
 
@@ -813,17 +839,24 @@ int main (void)
 		// else Display		
 		else
 		{
-			if((!GPB_2) || fMIX)		// MIX일때 FadeInOut X
-				fFade_InOut = FALSE;
-			else if(GPB_2)				// DIPSW2 _ Fade ON/OFF
-				fFade_InOut = TRUE;
-			
-			for(i = 0; i < 16; i++)
+			if(bDisplay == ERROR_CODE)
 			{
-				wColLineBuf[i] = FONT_CHARACTER[bDisplay][i];
-				
-				if(fMIX && (bDisplay == FIRE))
-					wColLineBuf_Sub[i] = FONT_CHARACTER[bDisplay + 1][i];
+				Display_Error_code(gbErrorCode);
+			}
+			else
+			{
+				if((!GPB_2) || fMIX)		// MIX일때 FadeInOut X
+					fFade_InOut = FALSE;
+				else if(GPB_2)				// DIPSW2 _ Fade ON/OFF
+					fFade_InOut = TRUE;
+			
+				for(i = 0; i < 16; i++)
+				{
+					wColLineBuf[i] = FONT_CHARACTER[bDisplay][i];
+					
+					if(fMIX && (bDisplay == FIRE))
+						wColLineBuf_Sub[i] = FONT_CHARACTER[bDisplay + 1][i];
+				}
 			}
 		}		
 	}
@@ -854,7 +887,7 @@ void LED_Check(void)
 	{
 		bColor = YELLOW;
 		for(j= 0; j < 16; j++)
-			wColLineBuf[j] = FONT_NUMBER[i][j];
+			wColLineBuf[j] = FONT_NUMBER1616[i][j];
 		
 		Delay_ms(200);
 	}
@@ -877,8 +910,8 @@ void LED_Check(void)
 		bColor = GRN;		
 	
 	// version display_move
-	Display_Text(4);
-	Display_Version();
+	Display_Version_Text();
+	Display_Version_Number();
 	Delay_ms(200);
 	
 	bColor = GRN;
@@ -910,7 +943,15 @@ void Read_Status(void)
 	{	
 		bLED_STS = ERROR;
 		
-		bDisplay = ERROR;
+		if(gbErrorCode)
+		{
+			fFade_InOut = FALSE;		// display 변경 할 때 Fade걸려 있음. (확인 필요!!)
+			bDisplay = ERROR_CODE;
+		}
+		else
+		{
+			bDisplay = ERROR;
+		}
 		bColor = RED;		
 		//printf(" ERROR ");
 	}
@@ -1018,7 +1059,7 @@ void Read_Status(void)
 		bPre_LED_STS = bLED_STS;
 }
 
-void Display_Version()
+void Display_Version_Number()
 {
 	int i = 0, bShift = 0;
 	
@@ -1026,7 +1067,7 @@ void Display_Version()
 	
 	for(i = 0; i < 16; i++)
 	{
-		wTemp[i] = (FONT_VERSION[bVer[0]][i] << 9) | FONT_VERSION[bVer[1]][i];
+		wTemp[i] = (FONT_NUMBER0816[bVer[0]][i] << 9) | FONT_NUMBER0816[bVer[1]][i];
 		wTemp[12] |= 0x0100;
 	}
 	
@@ -1040,23 +1081,59 @@ void Display_Version()
 	}	
 }
 
-void Display_Text(int MAX)
+void Display_Version_Text(void)
 {
 	int i = 0, num = 0, bShift = 0;	
 
-	for(num = 1; num <= (MAX - 2); num++)
+	for(num = 1; num <= 2; num++)
 	{
 		for(bShift = 0; bShift < 8; bShift++)
 		{
 			for(i = 0; i < 16; i++)
 			{
-				wColLineBuf[i] = (FONT_VERSION[bText[num - 1]][i]<< (bShift + 8)) |
-								 (FONT_VERSION[bText[num]][i] << bShift) |
-								 (FONT_VERSION[bText[num + 1]][i] >> (8 - bShift));
+				wColLineBuf[i] = (FONT_NUMBER0816[bText[num - 1]][i]<< (bShift + 8)) |
+								 (FONT_NUMBER0816[bText[num]][i] << bShift) |
+								 (FONT_NUMBER0816[bText[num + 1]][i] >> (8 - bShift));
 				wColLineBuf_Sub[i] = wColLineBuf[i];
 			}
 			Delay_ms(5);
 		}
-	}	
-	
+	}		
 }
+
+void Display_Error_code(BYTE bErrorCode)
+{
+	BYTE i = 0, bShift = 0;
+	WORD wErrorBuffer[2][16] = {0};
+	
+	// Error Buffer에 출력 데이터 저장 ex) 'E-99'
+	for(i = 0; i < 16; i++)
+	{
+		wErrorBuffer[0][i] = FONT_ERROR[i];
+		wErrorBuffer[1][i] = (FONT_NUMBER0816[bErrorCode / 10][i] << 8) | (FONT_NUMBER0816[bErrorCode % 10][i]);
+	}
+	
+	// Frame 1. 'E-' -> '99'
+	for(bShift = 1; bShift < 17; bShift++)
+	{
+		for(i = 0; i < 16; i++)
+		{
+			wColLineBuf[i] = (wErrorBuffer[0][i] << bShift) | (wErrorBuffer[1][i] >> (16 - bShift));
+		}
+		Delay_ms(15);
+	}
+	
+	// Delay for ErrorCode Display
+	Delay_ms(100);
+	
+	// Frame 2. '99' -> 'E-'
+	for(bShift = 0; bShift < 17; bShift++)
+	{
+		for(i = 0; i < 16; i++)
+		{
+			wColLineBuf[i] = (wErrorBuffer[1][i] << bShift) | (wErrorBuffer[0][i] >> (16 - bShift));
+		}
+		Delay_ms(15);
+	}
+}
+
