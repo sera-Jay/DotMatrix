@@ -27,29 +27,32 @@ typedef	unsigned long 	DWORD;
 //
 /*------------------------------------------------------*/
 
-#define FALSE		0
-#define TRUE		1
+#define FALSE			0
+#define TRUE			1
 
-#define TOP			1
-#define BOTTOM		0
+#define TOP				1
+#define BOTTOM			0
 
-#define GRN			1
-#define RED			2
-#define YELLOW		3
+#define GRN				1
+#define RED				2
+#define YELLOW			3
 
-#define VER			10
+#define TEXT_BK			14
+#define TEXT_V			11
+#define TEXT_E			12
+#define TEXT_R			13
 
-#define ERROR		0
-#define ERROR_CODE	20
-#define UP			1
-#define DOWN		2			// 어느 방향에서든 진입 하는 방향으로 화살표 표시 
-#define	INSP		3
-#define DONT		4
-#define DONT_sub 	5
-#define FIRE		6
-// FIRE_sub		7
-#define STOP		8
-#define AUTO		10
+#define ERROR			0
+#define ERROR_CODE		20
+#define UP				1
+#define DOWN			2			// 어느 방향에서든 진입 하는 방향으로 화살표 표시
+#define	INSP			3
+#define DONT			4
+#define DONT_sub 		5
+#define FIRE			6
+// FIRE_sub				7
+#define STOP			8
+#define AUTO			10
 
 
 #define Latch_G			GPB_9
@@ -57,13 +60,14 @@ typedef	unsigned long 	DWORD;
 
 #define IN_DIR			GPC_8
 #define IN_NE			GPC_9
+#define IN_STP			GPC_10
 
 #define IN_AUT			GPB_4
 #define IN_INS			GPB_5
 #define IN_ERR			GPB_6
 #define IN_FIRE			GPB_7
 
-#define IN_STP			GPF_5
+#define IN_BUZZER		GPF_5
 #define OUT_BUZZER		GPF_4
 /*
 #define IN_UP			GPC_8

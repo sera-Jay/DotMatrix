@@ -78,6 +78,7 @@
 	[23.03.20]
 		ver 1.3
 		 - Error code 표시 추가 (Only Can통신)
+		 - PCB 변경(180도 회전)으로 폰트 및 스크롤 프로그램 변경함
 */
 
 #include <stdio.h>
@@ -109,6 +110,7 @@ void LED_Check(void);
 
 void Read_Status(void);
 
+void Display_Version(void);
 void Display_Version_Text(void);
 void Display_Version_Number(void);
 
@@ -165,10 +167,8 @@ int bFrameCnt = 5;
 // Time Count
 BYTE b10msCnt;
 
-
 BYTE gbErrorCode = 0;
 
-BYTE bText[4] = {14, 11, 12, 13};	// { , V, E, R, }
 BYTE bVer[2]  = { 1,  3};				// ver 1.3
 
 /*------------------------------------------------------//
@@ -622,10 +622,10 @@ void Port_Init()
 	DrvGPIO_Open(E_GPC,  1, E_IO_OUTPUT);		// SPI_CLK		(SPI)
 	DrvGPIO_Open(E_GPC,  3, E_IO_OUTPUT);		// SPI_DATA		(SPI)
 	
-	DrvGPIO_Open(E_GPC,  8, E_IO_INPUT);		// UP
-	DrvGPIO_Open(E_GPC,  9, E_IO_INPUT);		// DOWN
+	DrvGPIO_Open(E_GPC,  8, E_IO_INPUT);		// DIR
+	DrvGPIO_Open(E_GPC,  9, E_IO_INPUT);		// NE	
+	DrvGPIO_Open(E_GPC, 10, E_IO_INPUT);		// STP, TESTPOINT 2
 	
-	DrvGPIO_Open(E_GPC, 10, E_IO_OUTPUT);	// TESTPOINT 2
 	DrvGPIO_Open(E_GPC, 11, E_IO_OUTPUT);	// TESTPOINT 3
 	
 	DrvGPIO_Open(E_GPC, 14, E_IO_OUTPUT);		// CAN_LED
@@ -767,7 +767,7 @@ int main (void)
 	//printf("/*****************************************/\n");
 	
 //------------------------------------------------------------------	
-	//printf("ID : %d,	Position = %s\n", (bDipsw & 0x07), (S_Flag.fPosition)?"TOP":"BOTTOM");
+	printf("ID : %d,	Position = %s\n", (bDipsw & 0x07), (S_Flag.fPosition)?"TOP":"BOTTOM");
 
 	while(1){
 
@@ -818,7 +818,7 @@ int main (void)
 			
 			S_Flag.fUp  = FALSE;
 			for(i = 0; i < 16; i++)	
-				wColLineBuf[i] = FONT_CHARACTER[bDisplay][((i + bArrow_Scroll) % 16) & 0xF];
+				wColLineBuf[i] = FONT_CHARACTER[bDisplay][((i - bArrow_Scroll) % 16) & 0xF];
 				
 		}
 		// Down_Scroll
@@ -830,9 +830,9 @@ int main (void)
 			for(i = 0; i < 16; i++)
 			{
 				if(fUPDOWN)
-					wColLineBuf[i] = FONT_CHARACTER[bDisplay][((i - bArrow_Scroll) % 16) & 0xF];
-				else
 					wColLineBuf[i] = FONT_CHARACTER[bDisplay][((i + bArrow_Scroll) % 16) & 0xF];
+				else
+					wColLineBuf[i] = FONT_CHARACTER[bDisplay][((i - bArrow_Scroll) % 16) & 0xF];
 			}
 		}
 
@@ -873,7 +873,7 @@ void LED_Check(void)
 	{
 		for(j = 0; j < 16; j++)
 		{		
-			wColLineBuf[j] = FONT_CHECK[((i - j) % 16) & 0xF];
+			wColLineBuf[j] = FONT_CHECK[((i + j) % 16) & 0xF];
 		}		
 		for(k = 1; k <= 3; k++)			// color test
 		{
@@ -892,26 +892,13 @@ void LED_Check(void)
 		Delay_ms(200);
 	}
 */
-/*	
-	// version display
-	for(i = 0; i < 16; i++)
-	{
-		if(S_Flag.fPosition == TOP)
-			bColor = RED;
-		else
-			bColor = GRN;
-		
-		wColLineBuf[i] = FONT_VERSION[VER][i] | (FONT_VERSION[wVer[0]][i] << 8) | FONT_VERSION[wVer[1]][i];
-	}	
-*/
 	if(S_Flag.fPosition == TOP)
 		bColor = RED;
 	else
 		bColor = GRN;		
 	
 	// version display_move
-	Display_Version_Text();
-	Display_Version_Number();
+	Display_Version();
 	Delay_ms(200);
 	
 	bColor = GRN;
@@ -1040,65 +1027,50 @@ void Read_Status(void)
 		fMIX = FALSE;
 	
 	// --------------------------------------------------------- BUZZER
-//	if(((C_Flag.fU_Buzz && (S_Flag.fPosition == TOP))	 ||		// CAN Signal (at TOP)
-//		(C_Flag.fD_Buzz && (S_Flag.fPosition == BOTTOM)) ||		// CAN Siganl (at BOTTOM)
-//		(IN_BUZZER == 1)) && (S_Flag.fBuzzer == FALSE))			// INPUT Signal
-//	{
-//		S_Flag.fBuzzer = TRUE;				// When the buzz signal is received, keep the buzz ON
-//		OUT_BUZZER = TRUE;
-//		//printf("Buzz_On  ");		
-//	}
-//	else if(C_Flag.fU_Buzz == C_Flag.fD_Buzz == IN_BUZZER == 0)
-//	{
-//		S_Flag.fBuzzer = FALSE;
-//		OUT_BUZZER = FALSE;
-//	}
+	if(((C_Flag.fU_Buzz && (S_Flag.fPosition == TOP))	 ||		// CAN Signal (at TOP)
+		(C_Flag.fD_Buzz && (S_Flag.fPosition == BOTTOM)) ||		// CAN Siganl (at BOTTOM)
+		(IN_BUZZER == 1)) && (S_Flag.fBuzzer == FALSE))			// INPUT Signal
+	{
+		S_Flag.fBuzzer = TRUE;				// When the buzz signal is received, keep the buzz ON
+		OUT_BUZZER = TRUE;
+		//printf("Buzz_On  ");		
+	}
+	else if(C_Flag.fU_Buzz == C_Flag.fD_Buzz == IN_BUZZER == 0)
+	{
+		S_Flag.fBuzzer = FALSE;
+		OUT_BUZZER = FALSE;
+	}
 	
 	// --------------------------------------------------------- LED_STATUS
 	if(bLED_STS != bPre_LED_STS)
 		bPre_LED_STS = bLED_STS;
 }
 
-void Display_Version_Number()
+void Display_Version(void)
 {
-	int i = 0, bShift = 0;
-	
-	WORD wTemp[16] = {0};
+	WORD wTemp[3][16] = {0};
+	int i = 0, j = 0, bShift = 0;
 	
 	for(i = 0; i < 16; i++)
 	{
-		wTemp[i] = (FONT_NUMBER0816[bVer[0]][i] << 9) | FONT_NUMBER0816[bVer[1]][i];
-		wTemp[12] |= 0x0100;
+		wTemp[0][i] = (FONT_NUMBER0816[TEXT_BK][i]) | (FONT_NUMBER0816[TEXT_V ][i] << 8);
+		wTemp[1][i] = (FONT_NUMBER0816[TEXT_E ][i]) | (FONT_NUMBER0816[TEXT_R ][i] << 8);
+		wTemp[2][i] = (FONT_NUMBER0816[bVer[0]][i]) | (FONT_NUMBER0816[bVer[1]][i] << 9);
 	}
 	
-	for(bShift = 0; bShift < 17; bShift++)
+	wTemp[2][3] |= 0x0100;
+	
+	for(j = 0; j < 2; j++)
 	{
-		for(i = 0; i < 16; i++)
-		{
-			wColLineBuf[i] = (wColLineBuf_Sub[i] << (bShift + 1)) | wTemp[i] >> (16 - bShift);			
-		}
-		Delay_ms(5);
-	}	
-}
-
-void Display_Version_Text(void)
-{
-	int i = 0, num = 0, bShift = 0;	
-
-	for(num = 1; num <= 2; num++)
-	{
-		for(bShift = 0; bShift < 8; bShift++)
+		for(bShift = 1; bShift < 17; bShift++)
 		{
 			for(i = 0; i < 16; i++)
 			{
-				wColLineBuf[i] = (FONT_NUMBER0816[bText[num - 1]][i]<< (bShift + 8)) |
-								 (FONT_NUMBER0816[bText[num]][i] << bShift) |
-								 (FONT_NUMBER0816[bText[num + 1]][i] >> (8 - bShift));
-				wColLineBuf_Sub[i] = wColLineBuf[i];
+				wColLineBuf[i] = (wTemp[j][i] >> bShift) | (wTemp[j + 1][i] << (16 - bShift));
 			}
 			Delay_ms(5);
 		}
-	}		
+	}
 }
 
 void Display_Error_code(BYTE bErrorCode)
@@ -1110,7 +1082,7 @@ void Display_Error_code(BYTE bErrorCode)
 	for(i = 0; i < 16; i++)
 	{
 		wErrorBuffer[0][i] = FONT_ERROR[i];
-		wErrorBuffer[1][i] = (FONT_NUMBER0816[bErrorCode / 10][i] << 8) | (FONT_NUMBER0816[bErrorCode % 10][i]);
+		wErrorBuffer[1][i] = (FONT_NUMBER0816[bErrorCode / 10][i]) | (FONT_NUMBER0816[bErrorCode % 10][i] << 8);
 	}
 	
 	// Frame 1. 'E-' -> '99'
@@ -1118,9 +1090,9 @@ void Display_Error_code(BYTE bErrorCode)
 	{
 		for(i = 0; i < 16; i++)
 		{
-			wColLineBuf[i] = (wErrorBuffer[0][i] << bShift) | (wErrorBuffer[1][i] >> (16 - bShift));
+			wColLineBuf[i] = (wErrorBuffer[0][i] >> bShift) | (wErrorBuffer[1][i] << (16 - bShift));
 		}
-		Delay_ms(15);
+		Delay_ms(7);
 	}
 	
 	// Delay for ErrorCode Display
@@ -1131,9 +1103,9 @@ void Display_Error_code(BYTE bErrorCode)
 	{
 		for(i = 0; i < 16; i++)
 		{
-			wColLineBuf[i] = (wErrorBuffer[1][i] << bShift) | (wErrorBuffer[0][i] >> (16 - bShift));
+			wColLineBuf[i] = (wErrorBuffer[1][i] >> bShift) | (wErrorBuffer[0][i] << (16 - bShift));
 		}
-		Delay_ms(15);
+		Delay_ms(7);
 	}
 }
 
