@@ -42,18 +42,41 @@ typedef	unsigned long 	DWORD;
 #define TEXT_E			12
 #define TEXT_R			13
 
-#define ERROR			0
-#define ERROR_CODE		20
-#define UP				1
-#define DOWN			2			// 어느 방향에서든 진입 하는 방향으로 화살표 표시
-#define	INSP			3
-#define DONT			4
-#define DONT_sub 		5
-#define FIRE			6
-// FIRE_sub				7
-#define STOP			8
-#define AUTO			10
+#define CAN_BIT_UP		0x01
+#define CAN_BIT_DOWN	0x02
+#define CAN_BIT_AUTO	0x04
+#define CAN_BIT_INSP	0x08
+#define CAN_BIT_ERROR	0x10
+#define CAN_BIT_FIRE	0x20
+#define CAN_BIT_UBZ		0x40
+#define CAN_BIT_DBZ		0x80
 
+
+#define SINPUT_NOTHING	0x0000
+#define SINPUT_BIT_DIR	0x0001
+#define SINPUT_BIT_NE	0x0002
+#define SINPUT_BIT_AUT	0x0004
+#define SINPUT_BIT_INS	0x0008
+#define SINPUT_BIT_ERR	0x0010
+#define SINPUT_BIT_FIRE 0x0020
+#define SINPUT_BIT_BUZ	0x0040
+#define SINPUT_BIT_STP	0x0080
+
+#define FONT_BLK		0
+#define FONT_X			1
+#define FONT_UP			2
+#define FONT_DN			3
+#define FONT_INSP		4
+#define FONT_DONT		5
+#define FONT_DONTsub	6
+#define FONT_FIRE		7
+#define FONT_FIREsub	8
+
+
+#define DIPSW1			GPB_0
+#define DIPSW2			GPB_1
+#define DIPSW3			GPB_2
+#define DIPSW4			GPB_3
 
 #define Latch_G			GPB_9
 #define Latch_R			GPB_10	
@@ -86,6 +109,22 @@ typedef	unsigned long 	DWORD;
 
 #define ReqCommTest_ID			0x0100
 #define STATUSMSG_ID			0x0500
+/*------------------------------------------------------*/
+//
+//			ENUM
+//
+/*------------------------------------------------------*/
+typedef enum _DISPLAY_MODE
+{
+	/* 0 */Display_NOTHING = 0,
+	/* 1 */Display_UP,
+	/* 2 */Dispaly_DOWN,
+	/* 3 */Display_DONT,
+	/* 4 */Display_INSP,
+	/* 5 */Display_FIRE,
+	/* 6 */Display_ERROR,
+	/* 7 */Display_ERROR_CODE
+} DISPLAY_MODE;
 
 /*------------------------------------------------------*/
 //
@@ -103,36 +142,61 @@ typedef struct _MSG_STATUS_ESCALATOR
 	BYTE bPessraeErrorCode;
 } MSG_STATUS_ESCALATOR;
 
-
-// CAN data Flag
-typedef struct _CAN_FLAG
+typedef struct _DISPLAY_INFO
 {
-	volatile WORD fUp		:1;
-	volatile WORD fDown		:1;
-	volatile WORD fAuto		:1;
-	volatile WORD fInsp		:1;
-	volatile WORD fError	:1;
-	volatile WORD fFire		:1;
-	volatile WORD fU_Buzz	:1;
-	volatile WORD fD_Buzz	:1;
-	
-	volatile WORD fMove		:1;
-	
-	WORD                    :7;
-} CAN_FLAG;
+	DISPLAY_MODE 	eMode;
+	BYTE			bColor;
+} DISPALY_INFO;
 
-// Status Flag
-typedef struct _STS_FLAG
+
+typedef struct _CAN_DATA
 {
-	volatile BYTE fPosition  :1;
-	volatile BYTE fUp 		 :1;
-	volatile BYTE fDown 	 :1;
-	volatile BYTE fAUTO	 	 :1;
-	volatile BYTE fINSP 	 :1;
-	volatile BYTE fError 	 :1;
-	volatile BYTE fFire 	 :1;
-	volatile BYTE fBuzzer 	 :1;	
-} STS_FLAG;
+	BYTE fDIR				: 1;
+	BYTE fNE				: 1;
+	BYTE fAuto				: 1;
+	BYTE fInsp				: 1;
+	BYTE fError				: 1;
+	BYTE fFire				: 1;
+	BYTE fUBZ				: 1;
+	BYTE fDBZ				: 1;
+} CAN_DATA;
+
+
+typedef union _GLOBAL_FLAG
+{
+	struct _GLOBAL_BIT
+	{
+		WORD fPosition		: 1;	// 1 : TOP,  0 : BOTTON
+		WORD fUpDown		: 1;	// 1 : DOWN, 0 : UP			(DIPSW_1)
+		WORD fScrollFuntion : 1;	// 1 : 
+		WORD fDisplayMix	: 1;
+		WORD fYellowBlink	: 1;
+		WORD fFadeMode		: 1;
+		WORD fFadeInOut		: 1;	// 1 : IN,   0 : OUT
+		
+	} bit;
+	
+	WORD wReg;
+} GLOBAL_FLAG;
+
+typedef union _INPUT_FLAG
+{
+	struct _INPUT_BIT
+	{
+		WORD fDIR			: 1;
+		WORD fNE			: 1;
+		WORD fAuto			: 1;
+		WORD fInsp			: 1;
+		WORD fError			: 1;
+		WORD fFire			: 1;
+		WORD fBuzzer		: 1;
+		WORD fStp			: 1;
+		
+		WORD 				: 8;
+	} bit;
+	
+	WORD wReg;
+} INPUT_FLAG;
 
 
 /*------------------------------------------------------*/
