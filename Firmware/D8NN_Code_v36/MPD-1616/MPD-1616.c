@@ -133,6 +133,8 @@ void TMR3_Callback(void);
 /*------------------------------------------------------*/
 
 /* external variable */
+extern const WORD TIMER_BAR[6][16];
+extern const WORD TIMER_BAR2[6][16];
 extern const WORD FONT_NUMBER1616[10][16];
 extern const WORD FONT_CHARACTER[9][16];	
 extern const WORD FONT_NUMBER0816[15][16];
@@ -167,6 +169,9 @@ volatile BYTE fArrowScroll, bArrow_Scroll, fScrollSLOW;
 volatile WORD wArrowCnt, wSpeed = 320;
 
 // Time Count
+WORD gwTimerCnt = 0;
+BYTE gbTimerIndex = 0;
+
 BYTE b10msCnt;
 
 BYTE gbErrorCode = 0;
@@ -219,79 +224,80 @@ int main (void)
 
 		wdt_reset();
 		
-		(DIPSW1) ? (gFlag.bit.fUpDown = TRUE)    	 : (gFlag.bit.fUpDown = FALSE);
-		(DIPSW2) ? (gFlag.bit.fScrollFuntion = TRUE) : (gFlag.bit.fScrollFuntion = FALSE);		
+		bDipsw = (DrvGPIO_GetPortBits(E_GPB) & 0x000F);
 		
-		Read_Status();		
-
-		// -------------------------------------------------- Display
-		
-		switch((uint8_t)gDisplay.eMode)
+		if(IN_DIR)
 		{
-			case Display_NOTHING : default :
-				for(i = 0; i < 16; i++)
-				{
-					wColLineBuf[i] = FONT_CHARACTER[FONT_BLK][i];
-				}
-				break;
-				
-			case Display_UP :
-				for(i = 0; i < 16; i++)
-				{
-					if(fArrowScroll)
-						wColLineBuf[i] = FONT_CHARACTER[FONT_UP][((i - bArrow_Scroll) % 16) & 0xF];
-					else
-						wColLineBuf[i] = FONT_CHARACTER[FONT_UP][i];
-				}
-				break;
-				
-			case Dispaly_DOWN :
-				for(i = 0; i < 16; i++)
-				{
-					if(fArrowScroll)
-						wColLineBuf[i] = FONT_CHARACTER[FONT_DN][((i + bArrow_Scroll) % 16) & 0xF];
-					else
-						wColLineBuf[i] = FONT_CHARACTER[FONT_DN][i];
-				}
-				break;
-				
-			case Display_DONT :
-				for(i = 0; i < 16; i++)
-				{
-					if(gFlag.bit.fYellowBlink)
-						wColLineBuf[i] = FONT_CHARACTER[FONT_DONT][i];
-					else
-						wColLineBuf[i] = FONT_CHARACTER[FONT_DONTsub][i];
-				}
-				break;
-				
-			case Display_INSP :
-				for(i = 0; i < 16; i++)
-				{
-					wColLineBuf[i] = FONT_CHARACTER[FONT_INSP][i];
-				}
-				break;
-				
-			case Display_FIRE :
-				for(i = 0; i < 16; i++)
-				{
-					wColLineBuf[i] = FONT_CHARACTER[FONT_FIRE][i];
-					wColLineBuf_Sub[i] = FONT_CHARACTER[FONT_FIREsub][i];
-				}
-				break;
-				
-			case Display_ERROR :
-				for(i = 0; i < 16; i++)
-				{
-					wColLineBuf[i] = FONT_CHARACTER[FONT_X][i];
-				}
-				break;
+			if(gFlag.bit.fStart == FALSE)
+				gFlag.bit.fStart = TRUE;
+		}
+		else
+		{
+			if(gbTimerIndex >= 5)
+				gFlag.bit.fStart = FALSE;
+		}
+		
+		
+		if(gFlag.bit.fStart)
+		{
+			gbTimerIndex = gwTimerCnt / 100;
 			
-			case Display_ERROR_CODE :
-				Display_Error_code(gbErrorCode);
-				break;
-				
-		}		
+			for(i = 0; i < 16; i++)
+			{
+				if(bDipsw == 0x00)
+				{
+					switch(gbTimerIndex)
+					{	
+						case 0 : case 1 :
+							gDisplay.bColor = GRN;					
+							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
+							break;
+						case 2 :
+							gDisplay.bColor = YELLOW;
+							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
+							wColLineBuf_Sub[i] = TIMER_BAR[gbTimerIndex][i];
+							break;						
+						case 3 :
+							gDisplay.bColor = RED;					
+							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
+							break;
+						case 4 : case 5 :
+							gDisplay.bColor = RED;
+							gFlag.bit.fDisplayMix = TRUE;
+						
+							if(gFlag.bit.fYellowBlink)
+								wColLineBuf[i] = FONT_CHARACTER[FONT_DONT][i];
+							else
+								wColLineBuf[i] = FONT_CHARACTER[FONT_DONTsub][i];
+							break;
+					}
+				}
+				else if(bDipsw == 0x01)
+				{
+					switch(gbTimerIndex)
+					{	
+						case 0 : case 1 : case 2 : case 3:
+							gDisplay.bColor = YELLOW;
+							//wColLineBuf[i] = TIMER_BAR[0][i];
+							wColLineBuf_Sub[i] = TIMER_BAR2[gbTimerIndex][i];
+							break;
+						case 4 : case 5 :
+							gDisplay.bColor = RED;
+							wColLineBuf[i] = TIMER_BAR[0][i];
+							break;
+					}
+				}
+			}
+		}
+		else
+		{
+			gFlag.bit.fDisplayMix = FALSE;
+			for(i = 0; i < 16; i++)
+			{
+				wColLineBuf[i] = 0;
+				wColLineBuf_Sub[i] = 0;
+			}
+		}
 	}
 }
 //------------------------------------------------------
@@ -1069,6 +1075,14 @@ void TMR1_Callback(void)
 {
 	static BYTE bON_Time = 0;
 	static BYTE bYellowCnt = 0;
+	
+	if(gFlag.bit.fStart)
+	{
+		if(gwTimerCnt < 500)		// 500 * 10ms = 5s
+			gwTimerCnt++;
+	}
+	else
+		gwTimerCnt = 0;
 	
 	if(fCan_TxStart)					// CAN Tx Overtime Count
 	{

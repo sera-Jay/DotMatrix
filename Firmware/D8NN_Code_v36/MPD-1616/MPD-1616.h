@@ -174,6 +174,7 @@ typedef union _GLOBAL_FLAG
 		WORD fFadeMode		: 1;
 		WORD fFadeInOut		: 1;	// 1 : IN,   0 : OUT
 		
+		WORD fStart			: 1;
 	} bit;
 	
 	WORD wReg;
