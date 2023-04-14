@@ -169,7 +169,7 @@ volatile BYTE fArrowScroll, bArrow_Scroll, fScrollSLOW;
 volatile WORD wArrowCnt, wSpeed = 320;
 
 // Time Count
-WORD gwTimerCnt = 0;
+WORD gwTimerCnt = 0, gwFlicker = 0;
 BYTE gbTimerIndex = 0;
 
 BYTE b10msCnt;
@@ -261,14 +261,9 @@ int main (void)
 							gDisplay.bColor = RED;					
 							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
 							break;
-						case 4 : case 5 :
+						case 4 :
 							gDisplay.bColor = RED;
-							gFlag.bit.fDisplayMix = TRUE;
-						
-							if(gFlag.bit.fYellowBlink)
-								wColLineBuf[i] = FONT_CHARACTER[FONT_DONT][i];
-							else
-								wColLineBuf[i] = FONT_CHARACTER[FONT_DONTsub][i];
+							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
 							break;
 					}
 				}
@@ -277,8 +272,15 @@ int main (void)
 					switch(gbTimerIndex)
 					{	
 						case 0 : case 1 : case 2 : case 3:
-							gDisplay.bColor = YELLOW;
-							//wColLineBuf[i] = TIMER_BAR[0][i];
+							if(gFlag.bit.fYellowBlink)
+							{
+								gDisplay.bColor = YELLOW;
+							}
+							else
+							{
+								gDisplay.bColor = GRN;
+							}
+							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
 							wColLineBuf_Sub[i] = TIMER_BAR2[gbTimerIndex][i];
 							break;
 						case 4 : case 5 :
@@ -287,11 +289,32 @@ int main (void)
 							break;
 					}
 				}
+				else if(bDipsw == 0x02)
+				{
+					switch(gbTimerIndex)
+					{	
+						case 0 : case 1 : case 2 : case 3 : case 4 :
+							gDisplay.bColor = GRN;
+							if(gwFlicker < 30)
+								wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
+							else if(gwFlicker < 50)
+								wColLineBuf[i] = TIMER_BAR[0][i];
+							else
+								gwFlicker = 0;
+							break;
+						case 5 :
+							wColLineBuf[i] = 0;
+							break;
+					}
+				}
 			}
 		}
 		else
 		{
 			gFlag.bit.fDisplayMix = FALSE;
+			
+			
+			gFlag.bit.fDisplayMix = TRUE;
 			for(i = 0; i < 16; i++)
 			{
 				wColLineBuf[i] = 0;
@@ -1062,8 +1085,7 @@ void TMR0_Callback(void)
 		
 			Latch_OFF();	
 			break;
-	}	
-
+	}
 	if(gFlag.bit.fFadeMode)
 		DrvTIMER_Start(E_TMR3);
 }
@@ -1078,11 +1100,15 @@ void TMR1_Callback(void)
 	
 	if(gFlag.bit.fStart)
 	{
+		gwFlicker++;
 		if(gwTimerCnt < 500)		// 500 * 10ms = 5s
 			gwTimerCnt++;
 	}
 	else
+	{
 		gwTimerCnt = 0;
+		gwFlicker = 0;
+	}
 	
 	if(fCan_TxStart)					// CAN Tx Overtime Count
 	{
