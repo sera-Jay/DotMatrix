@@ -79,7 +79,10 @@ typedef	unsigned long 	DWORD;
 #define DIPSW4			GPB_3
 
 #define Latch_G			GPB_9
-#define Latch_R			GPB_10	
+#define Latch_R			GPB_10
+
+#define OE_G			GPB_11
+#define OE_R			GPE_5
 
 #define IN_DIR			GPC_8
 #define IN_NE			GPC_9

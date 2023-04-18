@@ -626,10 +626,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>1</Focus>
-      <ColumnNumber>10</ColumnNumber>
+      <ColumnNumber>2</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>26</CurrentLine>
+      <TopLine>3</TopLine>
+      <CurrentLine>40</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\MPD_Font.c</PathWithFileName>
       <FilenameWithoutPath>MPD_Font.c</FilenameWithoutPath>
@@ -644,8 +644,8 @@
       <Focus>1</Focus>
       <ColumnNumber>24</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>277</TopLine>
-      <CurrentLine>305</CurrentLine>
+      <TopLine>1035</TopLine>
+      <CurrentLine>1078</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\MPD-1616.c</PathWithFileName>
       <FilenameWithoutPath>MPD-1616.c</FilenameWithoutPath>

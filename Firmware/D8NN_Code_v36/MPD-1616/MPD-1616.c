@@ -161,8 +161,8 @@ GLOBAL_FLAG		gFlag;
 
 // Display
 DISPALY_INFO 	gDisplay;
-WORD wColLineBuf[16];
-WORD wColLineBuf_Sub[16];
+WORD wColLineBuf_Grn[16];
+WORD wColLineBuf_Red[16];
 
 // Display - Arrow Scroll
 volatile BYTE fArrowScroll, bArrow_Scroll, fScrollSLOW;
@@ -248,22 +248,17 @@ int main (void)
 				{
 					switch(gbTimerIndex)
 					{	
-						case 0 : case 1 :
-							gDisplay.bColor = GRN;					
-							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
+						case 0 : case 1 :											
+							wColLineBuf_Grn[i] = TIMER_BAR[gbTimerIndex][i];
+							wColLineBuf_Red[i] = 0;
 							break;
-						case 2 :
-							gDisplay.bColor = YELLOW;
-							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
-							wColLineBuf_Sub[i] = TIMER_BAR[gbTimerIndex][i];
+						case 2 :							
+							wColLineBuf_Grn[i] = TIMER_BAR[gbTimerIndex][i];
+							wColLineBuf_Red[i] = TIMER_BAR[gbTimerIndex][i];
 							break;						
-						case 3 :
-							gDisplay.bColor = RED;					
-							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
-							break;
-						case 4 :
-							gDisplay.bColor = RED;
-							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
+						case 3 : case  4:
+							wColLineBuf_Grn[i] = 0;
+							wColLineBuf_Red[i] = TIMER_BAR[gbTimerIndex][i];
 							break;
 					}
 				}
@@ -271,21 +266,13 @@ int main (void)
 				{
 					switch(gbTimerIndex)
 					{	
-						case 0 : case 1 : case 2 : case 3:
-							if(gFlag.bit.fYellowBlink)
-							{
-								gDisplay.bColor = YELLOW;
-							}
-							else
-							{
-								gDisplay.bColor = GRN;
-							}
-							wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
-							wColLineBuf_Sub[i] = TIMER_BAR2[gbTimerIndex][i];
+						case 0 : case 1 : case 2 : case 3:							
+							wColLineBuf_Grn[i] = TIMER_BAR[0][i];
+							wColLineBuf_Red[i] = TIMER_BAR2[gbTimerIndex][i];
 							break;
 						case 4 : case 5 :
-							gDisplay.bColor = RED;
-							wColLineBuf[i] = TIMER_BAR[0][i];
+							wColLineBuf_Grn[i] = 0;
+							wColLineBuf_Red[i] = TIMER_BAR[0][i];
 							break;
 					}
 				}
@@ -293,17 +280,23 @@ int main (void)
 				{
 					switch(gbTimerIndex)
 					{	
-						case 0 : case 1 : case 2 : case 3 : case 4 :
-							gDisplay.bColor = GRN;
+						case 0 : case 1 : case 2 : case 3 : case 4 :							
 							if(gwFlicker < 30)
-								wColLineBuf[i] = TIMER_BAR[gbTimerIndex][i];
+							{
+								wColLineBuf_Grn[i] = TIMER_BAR[gbTimerIndex][i];
+								wColLineBuf_Red[i] = 0;
+							}
 							else if(gwFlicker < 50)
-								wColLineBuf[i] = TIMER_BAR[0][i];
+							{
+								wColLineBuf_Grn[i] = TIMER_BAR[0][i];
+								wColLineBuf_Red[i] = 0;
+							}
 							else
 								gwFlicker = 0;
 							break;
 						case 5 :
-							wColLineBuf[i] = 0;
+							wColLineBuf_Grn[i] = 0;
+							wColLineBuf_Red[i] = 0;
 							break;
 					}
 				}
@@ -311,14 +304,10 @@ int main (void)
 		}
 		else
 		{
-			gFlag.bit.fDisplayMix = FALSE;
-			
-			
-			gFlag.bit.fDisplayMix = TRUE;
 			for(i = 0; i < 16; i++)
 			{
-				wColLineBuf[i] = 0;
-				wColLineBuf_Sub[i] = 0;
+				wColLineBuf_Grn[i] = 0;
+				wColLineBuf_Red[i] = 0;
 			}
 		}
 	}
@@ -627,7 +616,7 @@ void LED_Check(void)
 	{
 		for(j = 0; j < 16; j++)
 		{		
-			wColLineBuf[j] = FONT_CHECK[((i + j) % 16) & 0xF];
+			wColLineBuf_Grn[j] = FONT_CHECK[((i + j) % 16) & 0xF];
 		}		
 		for(k = 1; k <= 3; k++)			// color test
 		{
@@ -641,7 +630,7 @@ void LED_Check(void)
 	{
 		bColor = YELLOW;
 		for(j= 0; j < 16; j++)
-			wColLineBuf[j] = FONT_NUMBER1616[i][j];
+			wColLineBuf_Grn[j] = FONT_NUMBER1616[i][j];
 		
 		Delay_ms(200);
 	}
@@ -659,8 +648,8 @@ void LED_Check(void)
 	// clear
 	for(i = 0; i < 16; i++)
 	{
-		wColLineBuf[i] = 0;
-		wColLineBuf_Sub[i] = 0;
+		wColLineBuf_Grn[i] = 0;
+		wColLineBuf_Red[i] = 0;
 	}	
 
 	// LED check
@@ -875,7 +864,7 @@ void Display_Version(void)
 		{
 			for(i = 0; i < 16; i++)
 			{
-				wColLineBuf[i] = (wTemp[j][i] >> bShift) | (wTemp[j + 1][i] << (16 - bShift));
+				wColLineBuf_Grn[i] = (wTemp[j][i] >> bShift) | (wTemp[j + 1][i] << (16 - bShift));
 			}
 			Delay_ms(5);
 		}
@@ -902,7 +891,7 @@ void Display_Error_code(BYTE bErrorCode)
 	{
 		for(i = 0; i < 16; i++)
 		{
-			wColLineBuf[i] = (wErrorBuffer[0][i] >> bShift) | (wErrorBuffer[1][i] << (16 - bShift));
+			wColLineBuf_Grn[i] = (wErrorBuffer[0][i] >> bShift) | (wErrorBuffer[1][i] << (16 - bShift));
 		}
 		Delay_ms(7);
 	}
@@ -915,7 +904,7 @@ void Display_Error_code(BYTE bErrorCode)
 	{
 		for(i = 0; i < 16; i++)
 		{
-			wColLineBuf[i] = (wErrorBuffer[1][i] >> bShift) | (wErrorBuffer[0][i] << (16 - bShift));
+			wColLineBuf_Grn[i] = (wErrorBuffer[1][i] >> bShift) | (wErrorBuffer[0][i] << (16 - bShift));
 		}
 		Delay_ms(7);
 	}
@@ -1054,38 +1043,26 @@ void TMR0_Callback(void)
 		//printf("Fade_%s, Cnt = %3d,    tcmp = %3d \n", (fFadeIN)?"IN ":"OUT",bFrameCnt, TIMER3->TCMPR);
 	}		
 
-	// Col Output -> SPI
-	DrvSPI_SingleWrite(eDRVSPI_PORT0, &wColLineBuf[bRowLine]);
+	// GRN Col Output -> SPI
+	DrvSPI_SingleWrite(eDRVSPI_PORT0, &wColLineBuf_Grn[bRowLine]);
 
 	// Row Output
 	DrvGPIO_SetPortBits(E_GPA, ~(0x01 << bRowLine));
+	Latch_G = 1;
 	
-	if(gFlag.bit.fDisplayMix && (gDisplay.eMode == Display_FIRE))		// Yellow color Display
-	{				
-		Latch_R = 1;
-		
-		DrvSPI_SingleWrite(eDRVSPI_PORT0, &wColLineBuf_Sub[bRowLine]);
-		DrvGPIO_SetPortBits(E_GPA, ~(0x01 << bRowLine));
-		
-		Latch_G = 1;
-	}
+	// RED Col Output -> SPI
+	DrvSPI_SingleWrite(eDRVSPI_PORT0, &wColLineBuf_Red[bRowLine]);
+
+	// Row Output
+	DrvGPIO_SetPortBits(E_GPA, ~(0x01 << bRowLine));	
+	Latch_R = 1;
+	
+	OE_G = 0;
+	OE_R = 0;
 	
 	// TESTPOINT 1, PWM Testing
 	GPB_15 = 1;
-	
-	// column Output _ Latch ON & OutPut Enable
-	switch(gDisplay.bColor)
-	{
-		case GRN :		GRN_ON();		break;
-		case RED :		RED_ON();		break;
-		case YELLOW :	YEL_ON();		break;
-		default : 
-			GPB_11 = 1;
-			GPE_5 = 1;
-		
-			Latch_OFF();	
-			break;
-	}
+
 	if(gFlag.bit.fFadeMode)
 		DrvTIMER_Start(E_TMR3);
 }
